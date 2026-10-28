@@ -1,0 +1,36 @@
+name: Funcionalidade
+description: Proponha uma nova funcionalidade ou melhoria da loja
+title: 'feat: '
+labels: ['funcionalidade']
+body:
+  - type: textarea
+    id: problema
+    attributes:
+      label: Qual necessidade da loja isto atende?
+    validations:
+      required: true
+  - type: textarea
+    id: criterios
+    attributes:
+      label: Critérios de aceitação
+      placeholder: |
+        - [ ] O cliente consegue...
+        - [ ] O sistema impede...
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área
+      options:
+        - vitrine
+        - produto
+        - carrinho
+        - pagamento
+        - autenticacao
+        - conta
+        - contato
+        - componentes
+        - documentacao
+    validations:
+      required: true

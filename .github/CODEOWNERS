@@ -1,0 +1,11 @@
+# Revisores automáticos por área (PGC 2 e 5.2).
+# Desenvolvedor líder: José Eduardo Gonçalves Silveira.
+#
+# Mudanças em pipelines, documentação de GCS e na estrutura da loja
+# pedem revisão do líder.
+
+/.github/            @josesilveiraa07
+/docs/               @josesilveiraa07
+/components/         @josesilveiraa07
+/pages/              @josesilveiraa07
+/styles/             @josesilveiraa07
