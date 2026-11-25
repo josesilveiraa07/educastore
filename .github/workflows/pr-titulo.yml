@@ -1,0 +1,30 @@
+# O merge na main é squash: o título do PR vira o commit que define a versão.
+
+name: PR
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  titulo-pr:
+    name: titulo-pr
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validar título no padrão Conventional Commits
+        env:
+          TITULO: ${{ github.event.pull_request.title }}
+        run: |
+          echo "Título: $TITULO"
+          PADRAO='^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([a-z0-9._-]+\))?!?: .{3,}$'
+          if echo "$TITULO" | grep -Eq "$PADRAO"; then
+            echo "Título válido."
+          else
+            echo "::error::Título fora do padrão Conventional Commits."
+            echo "Exemplo: feat(carrinho): recusa quantidade negativa"
+            exit 1
+          fi
