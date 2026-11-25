@@ -146,14 +146,15 @@ class CartComponent extends HTMLElement {
   }
 
   addToCart(product) {
+    const quantidade = RegrasCarrinho.recusarQuantidadeNegativa(product.quantity || 1);
     const existingItem = this.cartItems.find((item) => item.id === product.id);
 
     if (existingItem) {
-      existingItem.quantity += product.quantity || 1;
+      existingItem.quantity += quantidade;
     } else {
       this.cartItems.push({
         ...product,
-        quantity: product.quantity || 1,
+        quantity: quantidade,
       });
     }
 
