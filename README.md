@@ -31,7 +31,13 @@ O servidor precisa partir da raiz: vários links usam caminho absoluto (`/pages/
 
 ## Como testar
 
-Esta versão ainda não tem suíte automatizada. A verificação é manual, com o servidor local no ar:
+A regra que recusa quantidade negativa no carrinho fica em `lib/regras-carrinho.js`. O teste abaixo falha se essa regra for removida:
+
+```bash
+node --test
+```
+
+A verificação manual, com o servidor local no ar:
 
 1. Home: vitrine, busca e listagem de produtos.
 2. Produto: `/pages/product/product-detail.html`.
