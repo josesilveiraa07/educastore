@@ -1,0 +1,51 @@
+# Rollback para uma baseline já publicada — PGC 6.4.
+# Actions → Rollback → Run workflow → tag (ex.: v1.0.0).
+# Não altera a main: só marca a Release escolhida como Latest
+# e republica o pacote dela, depois da aprovação de production.
+
+name: Rollback
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag da versão para a qual voltar (ex.: v1.0.0)'
+        required: true
+        type: string
+
+concurrency:
+  group: cd-refs/heads/main
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  rollback:
+    name: Rollback para ${{ inputs.tag }}
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: ${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ inputs.tag }}
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      TAG: ${{ inputs.tag }}
+    steps:
+      - name: Validar tag e baixar o pacote da Release
+        run: |
+          echo "$TAG" | grep -Eq '^v[0-9]+\.[0-9]+\.[0-9]+$' || {
+            echo "::error::Tag inválida: use o formato vX.Y.Z"; exit 1; }
+          gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --pattern '*.zip' --dir entrega
+          ls entrega
+
+      - name: Marcar a Release como a versão oficial (Latest)
+        run: gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" --latest
+
+      - name: Registrar no resumo (auditoria — PGC 10)
+        run: |
+          {
+            echo "## Rollback executado"
+            echo "- Versão oficial voltou para **$TAG**"
+            echo "- Solicitado por: @$GITHUB_ACTOR"
+            echo "- A main não foi alterada. O passo seguinte é uma Issue e a correção por PR."
+          } >> "$GITHUB_STEP_SUMMARY"
